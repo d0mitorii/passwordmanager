@@ -1,20 +1,7 @@
-from flask import Flask, render_template, url_for, request, redirect
-from flask_sqlalchemy import SQLAlchemy
-
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
-db = SQLAlchemy(app)
-
-
-class PasswordManager(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    source = db.Column(db.String(20), nullable=False)
-    email = db.Column(db.String(30), nullable=False)
-    login = db.Column(db.String(20), nullable=True)
-    password = db.Column(db.String(8), nullable=False)
-
-    def __repr__(self):
-        return '<Item %r>' % self.id
+from app import app
+from app.models import PasswordManager
+from app.database import db
+from flask import request, redirect, url_for, render_template
 
 
 @app.route("/", methods=['POST', 'GET'])
@@ -48,6 +35,3 @@ def delete(id):
         return redirect('/')
     except:
         return 'No delete'
-
-if __name__ == '__main__':
-    app.run(debug=True)

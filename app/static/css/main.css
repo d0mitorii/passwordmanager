@@ -29,7 +29,7 @@ td:last-child {
     text-align: end;
 }
 
-.btn {
+.btn, #add_submit {
     background-color: rgb(46, 46, 46);
     border: none;
     color: white;
@@ -42,11 +42,11 @@ td:last-child {
     text-decoration: none;
 }
 
-.btn-submit {
+#add_submit {
     font-size: 16px;
 }
 
-.btn:hover {
+.btn:hover, #add_submit:hover {
     background-color: white;
     color: rgb(46, 46, 46);
 }

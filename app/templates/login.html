@@ -9,18 +9,23 @@
 <div class="container">
     
     <form action="/" method="post" class="login-form">
-        {{ form.hidden_tag() }}
+        {{ formLogin.hidden_tag() }}
         
         <div class="form_control">
-            {{ form.login.label() }}
-            {{ form.login() }}
+            {{ formLogin.login.label() }}
+            {{ formLogin.login(autocomplete='off') }}
         </div>
         <div class="form_control">
-            {{ form.password.label() }}
-            {{ form.password() }}
+            {{ formLogin.password.label() }}
+            {{ formLogin.password() }}
         </div>
-        
-        {{ form.login_submit(class='btn btn-submit') }}
+        <div class="form_control">
+            {{ formLogin.login_submit(class='btn btn-submit') }}
+        </div>
+        <div class="form_control center">
+            <a href="/registration" class="btn-text">Registration</a>
+        </div>
+
     </form>
 
 </div>

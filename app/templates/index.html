@@ -12,7 +12,7 @@
         
         <div class="form_control">
             {{ form.source.label() }}
-            {{ form.source() }}
+            {{ form.source(autocomplete='off')}}
         </div>
 
         <div class="form_control">
@@ -22,7 +22,7 @@
 
         <div class="form_control">
             {{ form.login.label() }}
-            {{ form.login() }}
+            {{ form.login(autocomplete='off') }}
         </div>
 
         <div class="form_control">
@@ -49,9 +49,9 @@
                     <td>{{ item.email }}</td>
                     <td>{{ item.login }}</td>
                     <td>
-                        <a href="" class="btn">Copy</a>
-                        <a href="" class="btn">Edit</a>
-                        <a href="/delete/{{ item.id }}" class="btn">Delete</a>
+                        <a href=""><img class="btn icon-button" src='static/img/icons/file-copy.svg'></a>
+                        <a href=""><img class="btn icon-button" src='static/img/icons/edit.svg'></a>
+                        <a href="/delete/{{ item.id }}"><img class="btn icon-button" src='static/img/icons/delete.svg'></a>
                     </td>
                 </tr>
             {% endfor %}

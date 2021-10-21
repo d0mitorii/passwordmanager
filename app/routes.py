@@ -1,10 +1,19 @@
+from operator import methodcaller
 from flask import request, redirect, url_for, render_template
+from wtforms import form
 from wtforms.validators import Email
 
 from app import app
 from app.models import PasswordManager
 from app.database import db
-from app.forms import AddPasswordForm
+from app.forms import AddPasswordForm, Login
+
+@app.route("/login", methods=['POST', 'GET'])
+def login():
+    formLogin = Login();
+    if formLogin.validate_on_submit():
+        return redirect('/')
+    return render_template('login.html', form=formLogin)
 
 
 @app.route("/", methods=['POST', 'GET'])

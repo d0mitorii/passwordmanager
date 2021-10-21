@@ -8,7 +8,6 @@
 <div class="container">
     
     <form action="/" method="post">
-
         {{ form.hidden_tag() }}
         
         <div class="form_control">
@@ -31,7 +30,7 @@
             {{ form.password() }}
         </div>
         
-        {{ form.add_submit() }}
+        {{ form.add_submit(class='btn btn-submit') }}
     </form>
 
     <table>

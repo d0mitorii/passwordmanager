@@ -9,3 +9,8 @@ class AddPasswordForm(FlaskForm):
     login = StringField("Login:")
     password = PasswordField("Password", validators=[DataRequired()])
     add_submit = SubmitField("Add")
+
+class Login(FlaskForm):
+    login = StringField("Login", validators=[DataRequired()])
+    password = PasswordField("Password", validators=[DataRequired()])
+    login_submit = SubmitField("Login")

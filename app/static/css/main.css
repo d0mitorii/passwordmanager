@@ -29,7 +29,7 @@ td:last-child {
     text-align: end;
 }
 
-.btn, #add_submit {
+.btn {
     background-color: rgb(46, 46, 46);
     border: none;
     color: white;
@@ -42,11 +42,11 @@ td:last-child {
     text-decoration: none;
 }
 
-#add_submit {
+.btn-submit {
     font-size: 16px;
 }
 
-.btn:hover, #add_submit:hover {
+.btn:hover, .btn-submit:hover {
     background-color: white;
     color: rgb(46, 46, 46);
 }
@@ -69,14 +69,28 @@ form {
     input {
         width: 100%;
     }
-
-    .form_control {
-        margin-bottom: 16px;
-    }
     
     .btn-submit {
         margin-top: 24px;
     }
+}
+
+.login-form {
+    max-width: 300px;
+    display: block;
+    margin: 50px auto;
+}
+
+.login-form input {
+    width: 100%;
+}
+
+.login-form .form_control {
+    margin-bottom: 16px;
+}
+
+.login-form .btn-submit {
+    margin-top: 24px;
 }
 
 input {

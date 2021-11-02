@@ -1,7 +1,20 @@
+from enum import unique
 from app.database import db
+
+
+class Users(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(30), nullable=False)
+    login = db.Column(db.String(20), nullable=False)
+    password = db.Column(db.String(128), nullable=False)
+
+    def __repr__(self):
+        return '<User %r>' % self.id
+
 
 class PasswordManager(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    user_login = db.Column(db.String(20), db.ForeignKey(Users.login))
     source = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(30), nullable=False)
     login = db.Column(db.String(20), nullable=True)

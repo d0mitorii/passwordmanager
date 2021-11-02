@@ -8,7 +8,7 @@
 
 <div class="container">
     
-    <form action="/" method="post" class="login-form">
+    <form method="post" class="login-form">
         {{ formLogin.hidden_tag() }}
         
         <div class="form_control">
@@ -23,7 +23,7 @@
             {{ formLogin.login_submit(class='btn btn-submit') }}
         </div>
         <div class="form_control center">
-            <a href="/registration" class="btn-text">Registration</a>
+            <a href="{{ url_for('registration') }}" class="btn-text">Registration</a>
         </div>
 
     </form>

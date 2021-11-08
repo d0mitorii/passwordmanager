@@ -1,5 +1,3 @@
-from os import error
-import re
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import request, redirect, url_for, render_template, session, g
 
@@ -78,7 +76,7 @@ def signup():
         hash = generate_password_hash(form.password_repeat.data)
         if not check_password_hash(hash, form.password.data):
             error = 'Password mismatch'
-            # return render_template('signup.html', form=form, error=error)
+            return render_template('signup.html', form=form, error=error)
         
         try:
             new_user = Users(email=form.email.data,

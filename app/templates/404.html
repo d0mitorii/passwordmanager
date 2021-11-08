@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Home page</title>
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+
+    <div class="header">
+        <div class="header__content _container">
+            <a href="/" class="header__logo">
+                <img class='logo__img' src="/static/img/logos/logo-white.svg">
+            </a>
+            <div class="header__menu">
+                <nav class="menu__body">
+                    <ul class="menu__list">
+                        <!-- <li class="list__item" ><a href="" class="btn-text">profile</a></li> -->
+                        <li class="list__item"><a href="/logout" class="btn-text">logout</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

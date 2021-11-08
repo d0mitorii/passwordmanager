@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block head %}
-    <title>Login</title>
+<title>Registration</title>
 {% endblock %}
 
 {% block body %}
@@ -10,13 +10,17 @@
     
     <form method="post" class="login-form">
         {{ form.hidden_tag() }}
-
+        
         {% if error %}
             <div class="form_control center error">
                 {{ error }}
             </div>
         {% endif %}
 
+        <div class="form_control">
+            {{ form.email.label() }}
+            {{ form.email() }}
+        </div>
         <div class="form_control">
             {{ form.login.label() }}
             {{ form.login(autocomplete='off') }}
@@ -26,12 +30,15 @@
             {{ form.password() }}
         </div>
         <div class="form_control">
-            {{ form.login_submit(class='btn btn-submit') }}
+            {{ form.password_repeat.label() }}
+            {{ form.password_repeat() }}
+        </div>
+        <div class="form_control">
+            {{ form.signup_submit(class='btn btn-submit') }}
         </div>
         <div class="form_control center">
-            <a href="{{ url_for('signup') }}" class="btn-text">Sign Up</a>
+            <a href="{{ url_for('login') }}" class="btn-text">Log In</a>
         </div>
-
     </form>
 
 </div>

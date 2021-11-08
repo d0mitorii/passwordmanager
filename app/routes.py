@@ -1,8 +1,8 @@
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask import request, redirect, url_for, render_template, session, g
+from flask import redirect, url_for, render_template, session, g
 
 from app import app
-from app.models import PasswordManager, Users
+from app.models import UserData, Users
 from app.database import db
 from app.forms import AddPasswordForm, LoginForm, SignupForm
 
@@ -29,7 +29,6 @@ def home_page():
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
-
     if g.user:
         return redirect(url_for('index', login=g.user.login))
 
@@ -53,12 +52,10 @@ def login():
 
 @app.route("/signup", methods=['POST', 'GET'])
 def signup():
-    
-    error = None
-
     if g.user:
         return redirect(url_for('index', login=g.user.login))
 
+    error = None
     form = SignupForm()
 
     if form.validate_on_submit():
@@ -80,9 +77,9 @@ def signup():
         
         try:
             new_user = Users(email=form.email.data,
-                            login=form.login.data,
-                            password=hash
-                            )               
+                             login=form.login.data,
+                             password=hash
+                             )               
             db.session.add(new_user)
             db.session.commit()
             return redirect(url_for('login'))
@@ -94,7 +91,6 @@ def signup():
 
 @app.route("/<login>", methods=['POST', 'GET'])
 def index(login):
-
     if not g.user:
         return redirect(url_for('login'))
 
@@ -103,25 +99,27 @@ def index(login):
 
     form = AddPasswordForm()
     if form.validate_on_submit():
-        new_item = PasswordManager(user_login=str(g.user.login),
-                                   source=form.source.data,
-                                   email=form.email.data,
-                                   login=form.login.data,
-                                   password=form.password.data
-                                   )
+        new_item = UserData(user_id=str(g.user.id),
+                            source=form.source.data,
+                            email=form.email.data,
+                            login=form.login.data,
+                            password=form.password.data
+                            )
         try:
             new_item.add()
             return redirect(url_for('index', login=g.user.login))
         except:
             return 'No added your note'
     else:
-        items = PasswordManager.query.filter(PasswordManager.user_login == g.user.login).all()
+        items = UserData.query.filter(UserData.user_id == g.user.id).all()
         return render_template('index.html', form=form, items=items)
 
 
 @app.route('/delete/<int:id>')
 def delete(id):
-    item_to_delete = PasswordManager.query.get_or_404(id)
+    item_to_delete = UserData.query.get_or_404(id)
+    if item_to_delete.user_id != g.user.id:
+        return redirect('/')
     try:
         item_to_delete.delete()
         return redirect('/')

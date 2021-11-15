@@ -1,18 +1,10 @@
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask import redirect, url_for, render_template, session, g
+from flask import redirect, url_for, render_template, session
 
 from app import app
 from app.models import UserData, Users
 from app.database import db
 from app.forms import AddPasswordForm, LoginForm, SignupForm
-
-
-@app.before_request
-def before_request():
-    g.user = None
-    if 'user_login' in session:
-        user = Users.query.filter_by(login=session['user_login']).first()
-        g.user = user
 
 
 @app.errorhandler(404)
@@ -22,15 +14,15 @@ def page_not_found(e):
 
 @app.route('/')
 def home_page():
-    if not g.user:
-        return redirect(url_for('login'))
-    return redirect(url_for('index', login=g.user.login))
+    if 'user_login' in session:
+        return redirect(url_for('index', login=session['user_login']))
+    return redirect(url_for('login'))
 
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
-    if g.user:
-        return redirect(url_for('index', login=g.user.login))
+    if 'user_login' in session:
+        return redirect(url_for('index', login=session['user_login']))
 
     error = None
     formLogin = LoginForm()
@@ -52,8 +44,8 @@ def login():
 
 @app.route("/signup", methods=['POST', 'GET'])
 def signup():
-    if g.user:
-        return redirect(url_for('index', login=g.user.login))
+    if 'user_login' in session:
+        return redirect(url_for('index', login=session['user_login']))
 
     error = None
     form = SignupForm()
@@ -91,15 +83,16 @@ def signup():
 
 @app.route("/<login>", methods=['POST', 'GET'])
 def index(login):
-    if not g.user:
+    if not 'user_login' in session:
         return redirect(url_for('login'))
 
-    if login != g.user.login:
+    if login != session['user_login']:
         return render_template('404.html')
 
     form = AddPasswordForm()
+    user = Users.query.filter_by(login=session['user_login']).first()
     if form.validate_on_submit():
-        new_item = UserData(user_id=str(g.user.id),
+        new_item = UserData(user_id=str(user.id),
                             source=form.source.data,
                             email=form.email.data,
                             login=form.login.data,
@@ -107,18 +100,19 @@ def index(login):
                             )
         try:
             new_item.add()
-            return redirect(url_for('index', login=g.user.login))
+            return redirect(url_for('index', login=session['user_login']))
         except:
             return 'No added your note'
     else:
-        items = UserData.query.filter(UserData.user_id == g.user.id).all()
+        items = UserData.query.filter(UserData.user_id == user.id).all()
         return render_template('index.html', form=form, items=items)
 
 
 @app.route('/delete/<int:id>')
 def delete(id):
+    user = Users.query.filter_by(login=session['user_login']).first()
     item_to_delete = UserData.query.get_or_404(id)
-    if item_to_delete.user_id != g.user.id:
+    if item_to_delete.user_id != user.id:
         return redirect('/')
     try:
         item_to_delete.delete()

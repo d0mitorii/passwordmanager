@@ -1,10 +1,6 @@
-{% extends 'base.html' %}
-
-{% block head %}
+{% extends 'base.html' %} {% block head %}
 <title>Home page</title>
-{% endblock %}
-
-{% block body %}
+{% endblock %} {% block body %}
 
 <div class="container">
 
@@ -24,30 +20,34 @@
         </div>
     </div>
 
-    <form method="post">
-        {{ form.hidden_tag() }}
-
+    <form class="form" method="post">
+        {{ form.hidden_tag() }} {% if item_to_edit %}
         <div class="form_control">
-            {{ form.source.label() }}
-            {{ form.source(autocomplete='off')}}
+            {{ form.source.label() }} {{ form.source(autocomplete='off', value=item_to_edit.source)}}
         </div>
-
         <div class="form_control">
-            {{ form.email.label() }}
-            {{ form.email() }}
+            {{ form.email.label() }} {{ form.email(value=item_to_edit.email) }}
         </div>
-
         <div class="form_control">
-            {{ form.login.label() }}
-            {{ form.login(autocomplete='off') }}
+            {{ form.login.label() }} {{ form.login(autocomplete='off', value=item_to_edit.login) }}
         </div>
-
         <div class="form_control">
-            {{ form.password.label() }}
-            {{ form.password() }}
+            {{ form.password.label() }} {{ form.password(value=item_to_edit.password) }}
         </div>
-        
-        {{ form.add_submit(class='btn btn-submit') }}
+        {{ form.upd_submit(class="btn btn-submit") }} {% else %}
+        <div class="form_control">
+            {{ form.source.label() }} {{ form.source(autocomplete='off')}}
+        </div>
+        <div class="form_control">
+            {{ form.email.label() }} {{ form.email() }}
+        </div>
+        <div class="form_control">
+            {{ form.login.label() }} {{ form.login(autocomplete='off') }}
+        </div>
+        <div class="form_control">
+            {{ form.password.label() }} {{ form.password() }}
+        </div>
+        {{ form.add_submit(class="btn btn-submit") }} {% endif %}
     </form>
 
     <table>
@@ -58,21 +58,22 @@
                 <th scope="col">login</th>
             </tr>
         </thead>
-        
+
         <tbody>
             {% for item in items %}
-                <tr>
-                    <td>{{ item.source }}</td>
-                    <td>{{ item.email }}</td>
-                    <td>{{ item.login }}</td>
-                    <td>
-                        <a href=""><img class="btn icon-button" src='static/img/icons/file-copy.svg'></a>
-                        <a href=""><img class="btn icon-button" src='static/img/icons/edit.svg'></a>
-                        <a href="/delete/{{ item.id }}"><img class="btn icon-button" src='static/img/icons/delete.svg'></a>
-                    </td>
-                </tr>
+            <tr>
+                <td>{{ item.source }}</td>
+                <td>{{ item.email }}</td>
+                <td>{{ item.login }}</td>
+                <td>
+                    <a href="/edit/{{ item.id }}"><img class="btn icon-button" src="{{ url_for('static', filename='/img/icons/edit.svg') }}"></a>
+                    <a href="/delete/{{ item.id }}"><img class="btn icon-button" src="{{ url_for('static', filename='/img/icons/delete.svg') }}"></a>
+                </td>
+            </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
+
+
 {% endblock %}

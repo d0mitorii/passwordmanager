@@ -81,7 +81,8 @@ td:last-child {
     font-size: 16px;
 }
 
-.btn:hover, .btn-submit:hover {
+.btn:hover,
+.btn-submit:hover {
     background-color: white;
     color: rgb(46, 46, 46);
 }
@@ -94,17 +95,15 @@ form {
     margin: 24px 0;
 }
 
-@media (max-width: 1044px){
+@media (max-width: 1044px) {
     form {
         max-width: 100%;
         display: block;
         margin: 50px auto;
     }
-
     input {
         width: 100%;
     }
-    
     .btn-submit {
         margin-top: 24px;
     }

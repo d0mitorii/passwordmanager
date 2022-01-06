@@ -10,6 +10,7 @@ class AddPasswordForm(FlaskForm):
     login = StringField("login")
     password = PasswordField("password", validators=[DataRequired()])
     add_submit = SubmitField("Add")
+    upd_submit = SubmitField("Upd")
 
 
 class LoginForm(FlaskForm):

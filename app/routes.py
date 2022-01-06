@@ -121,6 +121,35 @@ def delete(id):
         return 'No delete'
 
 
+@app.route('/edit/<int:id>', methods=['POST', 'GET'])
+def edit(id):
+    user = Users.query.filter_by(login=session['user_login']).first()
+    item_to_edit = UserData.query.get_or_404(id)
+    if item_to_edit.user_id != user.id:
+        return redirect('/')
+
+    form = AddPasswordForm()
+    items = UserData.query.filter(UserData.user_id == user.id).all()
+    if form.validate_on_submit():
+        new_item = UserData(user_id=str(user.id),
+                            source=form.source.data,
+                            email=form.email.data,
+                            login=form.login.data,
+                            password=form.password.data
+                            )
+        item_to_edit.source = form.source.data
+        item_to_edit.email = form.email.data
+        item_to_edit.login = form.login.data
+        item_to_edit.password = form.password.data
+        try:
+            new_item.edit()
+            return redirect(url_for('index', login=session['user_login']))
+        except:
+            return 'No added your note'
+    else:
+        return render_template('index.html', form=form, items=items, item_to_edit=item_to_edit)
+
+
 @app.route('/logout')
 def logout():
     session.clear()

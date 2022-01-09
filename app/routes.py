@@ -6,6 +6,7 @@ from app import app
 from app.models import UserData, Users
 from app.database import db
 from app.forms import AddPasswordForm, LoginForm, SignupForm, SetupKeyForm
+from app.crypto import AESCrypt
 
 
 def key_availability(f):
@@ -20,7 +21,6 @@ def key_availability(f):
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        print(session)
         if 'user_login' in session:
             return redirect(url_for('index', login=session['user_login']))
         return f(*args, **kwargs)
@@ -102,25 +102,28 @@ def signup():
 def index(login):
     if not 'user_login' in session:
         return redirect(url_for('login'))
-
     if login != session['user_login']:
         return render_template('404.html')
     form = AddPasswordForm()
     user = Users.query.filter_by(login=session['user_login']).first()
+    key = session['key']
     if form.validate_on_submit():
         new_item = UserData(user_id=str(user.id),
                             source=form.source.data,
                             email=form.email.data,
                             login=form.login.data,
-                            password=form.password.data
+                            password=AESCrypt.encrypt(form.password.data, key)
                             )
         try:
+            print(new_item.password)
             new_item.add()
             return redirect(url_for('index', login=session['user_login']))
         except:
             return 'No added your note'
     else:
         items = UserData.query.filter(UserData.user_id == user.id).all()
+        for item in items:
+            item.password = AESCrypt.decrypt(item.password, key)
         return render_template('index.html', form=form, items=items)
 
 
@@ -145,6 +148,7 @@ def delete(id):
 def edit(id):
     if not 'user_login' in session:
         return redirect(url_for('login'))
+    key = session['key']
 
     user = Users.query.filter_by(login=session['user_login']).first()
     item_to_edit = UserData.query.get_or_404(id)
@@ -153,19 +157,13 @@ def edit(id):
 
     form = AddPasswordForm()
     items = UserData.query.filter(UserData.user_id == user.id).all()
+    for item in items:
+        item.password = AESCrypt.decrypt(bytes(item.password), key)
     if form.validate_on_submit():
-        new_item = UserData(user_id=str(user.id),
-                            source=form.source.data,
-                            email=form.email.data,
-                            login=form.login.data,
-                            password=form.password.data
-                            )
-        item_to_edit.source = form.source.data
-        item_to_edit.email = form.email.data
-        item_to_edit.login = form.login.data
-        item_to_edit.password = form.password.data
+        item_to_edit.password=AESCrypt.encrypt(form.password.data, key)
         try:
-            new_item.edit()
+            print(item_to_edit.password)
+            item_to_edit.edit()
             return redirect(url_for('index', login=session['user_login']))
         except:
             return 'No added your note'
@@ -193,7 +191,7 @@ def setup_key():
             error = 'The key must be 16 bytes long'
             return render_template('setup_key.html', form=form, error=error)
         session.pop('key', None)
-        session['key'] = form.key.data
+        session['key'] = str(form.key.data)
         return redirect(url_for('login'))
 
     return render_template('setup_key.html', form=form, error=error)

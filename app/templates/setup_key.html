@@ -1,0 +1,40 @@
+{% extends 'base.html' %} {% block head %}
+<title>Login</title>
+{% endblock %} {% block body %}
+<div class="container">
+
+    <div class="header">
+        <div class="header__content _container">
+            <a href="/" class="header__logo">
+                <img class='logo__img' src="/static/img/logos/logo-white.svg">
+            </a>
+            <div class="header__menu">
+                <nav class="menu__body">
+                    <ul class="menu__list">
+                        <li class="list__item"><a href="{{ url_for('setup_key') }}" class="btn-text">key</a></li>
+                        <li class="list__item"><a href="{{ url_for('logout') }}" class="btn-text">logout</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <form method="post" class="login-form">
+        {{ form.hidden_tag() }} {% if error %}
+        <div class="form_control center error">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <div class="form_control">
+            {{ form.key.label() }} {{ form.key(autocomplete='off') }}
+        </div>
+
+        <div class="form_control center">
+            {{ form.confirm_submit(class="btn btn-submit") }}
+        </div>
+
+    </form>
+
+</div>
+{% endblock %}

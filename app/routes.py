@@ -1,10 +1,30 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import redirect, url_for, render_template, session
+from functools import wraps
 
 from app import app
 from app.models import UserData, Users
 from app.database import db
-from app.forms import AddPasswordForm, LoginForm, SignupForm
+from app.forms import AddPasswordForm, LoginForm, SignupForm, SetupKeyForm
+
+
+def key_availability(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not 'key' in session:
+            return redirect(url_for('setup_key'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        print(session)
+        if 'user_login' in session:
+            return redirect(url_for('index', login=session['user_login']))
+        return f(*args, **kwargs)
+    return decorated_function
 
 
 @app.errorhandler(404)
@@ -13,17 +33,15 @@ def page_not_found(e):
 
 
 @app.route('/')
+@login_required
+@key_availability
 def home_page():
-    if 'user_login' in session:
-        return redirect(url_for('index', login=session['user_login']))
     return redirect(url_for('login'))
 
 
 @app.route('/login', methods=['POST', 'GET'])
+@login_required
 def login():
-    if 'user_login' in session:
-        return redirect(url_for('index', login=session['user_login']))
-
     error = None
     formLogin = LoginForm()
 
@@ -43,10 +61,8 @@ def login():
 
 
 @app.route("/signup", methods=['POST', 'GET'])
+@login_required
 def signup():
-    if 'user_login' in session:
-        return redirect(url_for('index', login=session['user_login']))
-
     error = None
     form = SignupForm()
 
@@ -82,13 +98,13 @@ def signup():
 
 
 @app.route("/<login>", methods=['POST', 'GET'])
+@key_availability
 def index(login):
     if not 'user_login' in session:
         return redirect(url_for('login'))
 
     if login != session['user_login']:
         return render_template('404.html')
-
     form = AddPasswordForm()
     user = Users.query.filter_by(login=session['user_login']).first()
     if form.validate_on_submit():
@@ -109,7 +125,10 @@ def index(login):
 
 
 @app.route('/delete/<int:id>')
+@key_availability
 def delete(id):
+    if not 'user_login' in session:
+        return redirect(url_for('login'))
     user = Users.query.filter_by(login=session['user_login']).first()
     item_to_delete = UserData.query.get_or_404(id)
     if item_to_delete.user_id != user.id:
@@ -122,7 +141,11 @@ def delete(id):
 
 
 @app.route('/edit/<int:id>', methods=['POST', 'GET'])
+@key_availability
 def edit(id):
+    if not 'user_login' in session:
+        return redirect(url_for('login'))
+
     user = Users.query.filter_by(login=session['user_login']).first()
     item_to_edit = UserData.query.get_or_404(id)
     if item_to_edit.user_id != user.id:
@@ -152,5 +175,25 @@ def edit(id):
 
 @app.route('/logout')
 def logout():
+    if not 'user_login' in session:
+        return redirect(url_for('login'))
     session.clear()
     return redirect(url_for('login'))
+
+
+@app.route('/setup_key', methods=['POST', 'GET'])
+def setup_key():
+    if not 'user_login' in session:
+        return redirect(url_for('login'))
+    error = None
+    form = SetupKeyForm()
+
+    if form.validate_on_submit():
+        if len(form.key.data) != 16:
+            error = 'The key must be 16 bytes long'
+            return render_template('setup_key.html', form=form, error=error)
+        session.pop('key', None)
+        session['key'] = form.key.data
+        return redirect(url_for('login'))
+
+    return render_template('setup_key.html', form=form, error=error)

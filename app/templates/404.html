@@ -1,27 +1,21 @@
-{% extends 'base.html' %}
-
-{% block head %}
+{% extends 'base.html' %} {% block head %}
 <title>404 Not Found</title>
-{% endblock %}
+{% endblock %} {% block body %}
 
-{% block body %}
-
-<div class="container">
-
-    <div class="header">
-        <div class="header__content _container">
-            <a href="/" class="header__logo">
-                <img class='logo__img' src="/static/img/logos/logo-white.svg">
-            </a>
-            <div class="header__menu">
-                <nav class="menu__body">
-                    <ul class="menu__list">
-                        <!-- <li class="list__item" ><a href="" class="btn-text">profile</a></li> -->
-                        <li class="list__item"><a href="/logout" class="btn-text">logout</a></li>
-                    </ul>
-                </nav>
-            </div>
+<div class="header">
+    <div class="header__content _container">
+        <a href="/" class="header__logo">
+            <img class='logo__img' src="/static/img/logos/logo-white.svg">
+        </a>
+        <div class="header__menu">
+            <nav class="menu__body">
+                <ul class="menu__list">
+                    <li class="list__item"><a href="{{ url_for('setup_key') }}" class="btn-text">key</a></li>
+                    <li class="list__item"><a href="{{ url_for('logout') }}" class="btn-text">logout</a></li>
+                </ul>
+            </nav>
         </div>
     </div>
 </div>
+
 {% endblock %}

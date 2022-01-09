@@ -12,8 +12,8 @@
             <div class="header__menu">
                 <nav class="menu__body">
                     <ul class="menu__list">
-                        <!-- <li class="list__item" ><a href="" class="btn-text">profile</a></li> -->
-                        <li class="list__item"><a href="/logout" class="btn-text">logout</a></li>
+                        <li class="list__item"><a href="{{ url_for('setup_key') }}" class="btn-text">key</a></li>
+                        <li class="list__item"><a href="{{ url_for('logout') }}" class="btn-text">logout</a></li>
                     </ul>
                 </nav>
             </div>
@@ -56,6 +56,7 @@
                 <th scope="col">source</th>
                 <th scope="col">email</th>
                 <th scope="col">login</th>
+                <th scope="col">password</th>
             </tr>
         </thead>
 
@@ -66,8 +67,17 @@
                 <td>{{ item.email }}</td>
                 <td>{{ item.login }}</td>
                 <td>
-                    <a href="/edit/{{ item.id }}"><img class="btn icon-button" src="{{ url_for('static', filename='/img/icons/edit.svg') }}"></a>
-                    <a href="/delete/{{ item.id }}"><img class="btn icon-button" src="{{ url_for('static', filename='/img/icons/delete.svg') }}"></a>
+                    {{ item.password }}
+                </td>
+                <td>
+                    <div class="button">
+                        <div class="btn_popup">
+                            <div class="popuptext">Copy</div>
+                            <button class="copyBtn" value="{{ item.password }}"><img class="icon" src="{{ url_for('static', filename='/img/icons/file-copy.svg') }}"></button>
+                        </div>
+                        <a href="/edit/{{ item.id }}"><img class="btn icon-button" src="{{ url_for('static', filename='/img/icons/edit.svg') }}"></a>
+                        <a href="/delete/{{ item.id }}"><img class="btn icon-button" src="{{ url_for('static', filename='/img/icons/delete.svg') }}"></a>
+                    </div>
                 </td>
             </tr>
             {% endfor %}

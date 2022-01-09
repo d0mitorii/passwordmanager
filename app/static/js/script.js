@@ -1,10 +1,20 @@
 $(document).ready(function() {
-    const btn = document.getElementById("btn_add");
 
-    btn.addEventListener("click", ViewFormOfCreation);
+    var buttons = document.getElementsByClassName("copyBtn");
+    var popuptext = document.getElementsByClassName("popuptext");
 
-    function ViewFormOfCreation() {
-        const form = document.getElementsByClassName("form")[0].style = "display: flex";
-        const button = document.getElementsByClassName("button")[0].style = "display: none";
+    for (let i = 0; i < buttons.length; i++) {
+        buttons[i].addEventListener("click", function() {
+            navigator.clipboard.writeText($(this).val());
+            popuptext[i].style.transition = '0.5s';
+            popuptext[i].style.opacity = 1;
+            setTimeout(hiddenText, 500, popuptext[i]);
+        });
+    }
+
+    function hiddenText(popuptext) {
+        popuptext.style.opacity = 0;
+        popuptext.style.transition = '1s';
+
     }
 });

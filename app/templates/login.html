@@ -1,29 +1,21 @@
-{% extends 'base.html' %}
-
-{% block head %}
-    <title>Login</title>
-{% endblock %}
-
-{% block body %}
+{% extends 'base.html' %} {% block head %}
+<title>Login</title>
+{% endblock %} {% block body %}
 
 <div class="container">
-    
-    <form method="post" class="login-form">
-        {{ form.hidden_tag() }}
 
-        {% if error %}
-            <div class="form_control center error">
-                {{ error }}
-            </div>
+    <form method="post" class="login-form">
+        {{ form.hidden_tag() }} {% if error %}
+        <div class="form_control center error">
+            {{ error }}
+        </div>
         {% endif %}
 
         <div class="form_control">
-            {{ form.login.label() }}
-            {{ form.login(autocomplete='off') }}
+            {{ form.login.label() }} {{ form.login(autocomplete='off') }}
         </div>
         <div class="form_control">
-            {{ form.password.label() }}
-            {{ form.password() }}
+            {{ form.password.label() }} {{ form.password() }}
         </div>
         <div class="form_control">
             {{ form.login_submit(class='btn btn-submit') }}

@@ -3,6 +3,7 @@ body {
     background-color: black;
     color: white;
     font-weight: normal;
+    margin: 0;
 }
 
 .header {
@@ -60,8 +61,38 @@ td {
     padding: 16px 0;
 }
 
+tr {
+    align-items: center;
+}
+
 td:last-child {
     text-align: end;
+    padding-top: 0px;
+}
+
+button {
+    width: 24px;
+    height: 24px;
+    vertical-align: middle;
+    cursor: pointer;
+    border-radius: 2px;
+    border: none;
+    padding: 0;
+    background-color: rgb(46, 46, 46);
+}
+
+button:hover {
+    background-color: white;
+}
+
+button:active {
+    background-color: rgb(46, 46, 46);
+}
+
+.icon {
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
 }
 
 .btn {
@@ -149,6 +180,7 @@ label {
     width: 16px;
     padding: 4px;
     fill: white;
+    vertical-align: middle;
 }
 
 .btn-text {
@@ -168,4 +200,22 @@ label {
 
 .error {
     color: maroon;
+}
+
+.button {
+    display: inline;
+    padding-top: -10px;
+}
+
+.btn_popup {
+    display: inline-block;
+}
+
+.popuptext {
+    position: relative;
+    z-index: 1;
+    top: -10px;
+    left: 3px;
+    /* visibility: hidden; */
+    opacity: 0;
 }

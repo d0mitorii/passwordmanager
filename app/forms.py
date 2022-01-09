@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_wtf.recaptcha import validators
 from wtforms import StringField, SubmitField, PasswordField
-from wtforms.validators import DataRequired, Email
+from wtforms.validators import DataRequired, Email, Length
 
 
 class AddPasswordForm(FlaskForm):
@@ -22,6 +22,10 @@ class LoginForm(FlaskForm):
 class SignupForm(FlaskForm):
     email = StringField("email", validators=[DataRequired(), Email()])
     login = StringField("login", validators=[DataRequired()])
-    password = PasswordField("password", validators=[DataRequired()])
-    password_repeat = PasswordField("repeat password", validators=[DataRequired()])
+    password = PasswordField("password", validators=[DataRequired(), Length(min=8)])
+    password_repeat = PasswordField("repeat password", validators=[DataRequired(), Length(min=8)])
     signup_submit = SubmitField("Sign Up")
+
+class SetupKeyForm(FlaskForm):
+    key = PasswordField("key", validators=[DataRequired()])
+    confirm_submit = SubmitField("Confirm")
